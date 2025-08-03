@@ -1,0 +1,15 @@
+server:
+  port: 8000
+
+
+spring:
+  application:
+    name: cloud-order-service
+  profiles:
+    active: dev
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        service-name: ${spring.application.name}
