@@ -1,38 +1,25 @@
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
-
-### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
-*.iws
+### JetBrains IDE (IntelliJ IDEA) ###
+# 核心忽略规则
+.idea/
 *.iml
 *.ipr
+*.iws
 
-### Eclipse ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+# 忽略所有模块文件
+**/modules.xml
+**/*.id
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+# 忽略用户配置和工作区文件
+**/workspace.xml
+**/tasks.xml
+**/usage.statistics.xml
+**/dictionaries/
+
+# 忽略历史记录和缓存
+**/history/
+**/shelf/
+
+# 忽略 Gradle 项目自动生成的文件
+.gradle/
 build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
-.vscode/
-
-### Mac OS ###
-.DS_Store
+out/
