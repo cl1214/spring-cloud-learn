@@ -20,4 +20,9 @@ public class OrderServiceImpl implements OrderService {
 
         return restTemplate.getForEntity(url + "pay/getPay?id=" + id, PayDto.class).getBody();
     }
+
+    @Override
+    public String loadBanlance() {
+        return restTemplate.getForEntity(url + "pay/loadBanlance", String.class).getBody();
+    }
 }

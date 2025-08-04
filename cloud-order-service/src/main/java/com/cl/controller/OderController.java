@@ -19,4 +19,9 @@ public class OderController {
     public ResultData getPay(@RequestParam("id") Long id) {
         return ResultData.success(orderService.getPay(id));
     }
+
+    @GetMapping("loadBanlance")
+    public String loadBanlance() {
+        return orderService.loadBanlance();
+    }
 }

@@ -1,10 +1,6 @@
 server:
-  port: 8001
-
-
+  port: 8002
 spring:
-  application:
-    name: cloud-payment-service
   profiles:
     active: dev
   datasource:
@@ -13,9 +9,3 @@ spring:
     url: jdbc:mysql://192.168.100.10:3306/spring_cloud_learn?characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true
     username: root
     password: 123456
-  cloud:
-    consul:
-      host: localhost
-      port: 8500
-      discovery:
-        service-name: ${spring.application.name}
