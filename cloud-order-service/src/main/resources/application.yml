@@ -13,3 +13,33 @@ spring:
       port: 8500
       discovery:
         service-name: ${spring.application.name}
+    openfeign:
+      client:
+        config:
+          default:
+            connect-timeout: 3000
+            read-timeout: 3000
+          cloud-payment-service:
+            connect-timeout: 2000
+            read-timeout: 2000
+      httpclient:
+        hc5:
+          enabled: true
+      compression:
+        request:
+          enabled: true
+          min-request-size: 2048
+        response:
+          enabled: true
+#    loadbalancer:
+#      retry:
+#        enabled: true
+#        max-retries-on-same-service-instance: 2
+logging:
+  level:
+    com:
+      cl:
+        common:
+          api:
+            PayApi: debug
+#        max-retries-on-next-service-instance: 1

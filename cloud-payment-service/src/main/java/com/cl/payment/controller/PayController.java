@@ -20,7 +20,7 @@ public class PayController {
     @Value("${server.port}")
     private String port;
 
-    @Value("${consule.testvalue}")
+//    @Value("${consule.testvalue}")
     private String confValue;
 
     @GetMapping("getPay")
@@ -36,5 +36,16 @@ public class PayController {
     @GetMapping("loadBanlance")
     public String loadBanlance() {
         return "cloud-payment-service:" + port;
+    }
+
+    @GetMapping("timeOut")
+    public void timeOut() {
+        try {
+            System.out.println(111);
+
+            Thread.sleep(79000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
