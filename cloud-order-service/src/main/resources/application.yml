@@ -31,6 +31,10 @@ spring:
           min-request-size: 2048
         response:
           enabled: true
+      circuitbreaker:
+        enabled: true
+        group:
+          enabled: true
 #    loadbalancer:
 #      retry:
 #        enabled: true
@@ -43,3 +47,36 @@ logging:
           api:
             PayApi: debug
 #        max-retries-on-next-service-instance: 1
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        failureRateThreshold: 50
+        recordExceptions:
+          - org.springframework.web.client.HttpServerErrorException
+          - java.io.IOException
+          - java.util.concurrent.TimeoutException
+          - org.springframework.web.client.ResourceAccessException
+        ignore-exceptions:
+          -
+    instances:
+      cloud-payment-service:
+        baseConfig: default
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: health,circuitbreakers
+  health:
+    circuitbreakers:
+      enabled: true

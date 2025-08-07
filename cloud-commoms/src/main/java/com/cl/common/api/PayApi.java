@@ -17,4 +17,7 @@ public interface PayApi {
     @GetMapping("pay/timeOut")
     public void timeOut();
 
+    @GetMapping("pay/circuitBreaker")
+    public String circuitBreaker(Long id);
+
 }

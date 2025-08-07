@@ -48,4 +48,13 @@ public class PayController {
             throw new RuntimeException(e);
         }
     }
+
+    @GetMapping("circuitBreaker")
+    public String circuitBreaker(Long id) {
+        if (id == 9999) {
+            int i = 1 / 0;
+            return "";
+        }
+        return "正常返回";
+    }
 }

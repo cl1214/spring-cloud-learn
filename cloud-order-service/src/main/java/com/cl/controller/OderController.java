@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.util.DateUtils;
 import com.cl.common.api.PayApi;
 import com.cl.common.resp.ResultData;
 import com.cl.service.OrderService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -62,5 +63,16 @@ public class OderController {
         System.out.println(DateUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
         payApi.timeOut();
         System.out.println(DateUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+    }
+
+
+    @GetMapping("circuitBreaker")
+    @CircuitBreaker(name = "cloud-payment-service", fallbackMethod = "fallback")
+    public String circuitBreaker(Long id) {
+        return payApi.circuitBreaker(id);
+    }
+
+    private String fallback(Long id, Throwable ex) {
+        return "系统出错";
     }
 }
