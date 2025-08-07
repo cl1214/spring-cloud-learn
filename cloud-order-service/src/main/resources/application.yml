@@ -1,7 +1,6 @@
 server:
   port: 8000
 
-
 spring:
   application:
     name: cloud-order-service
@@ -20,8 +19,8 @@ spring:
             connect-timeout: 3000
             read-timeout: 3000
           cloud-payment-service:
-            connect-timeout: 2000
-            read-timeout: 2000
+            connect-timeout: 20000
+            read-timeout: 20000
       httpclient:
         hc5:
           enabled: true
@@ -48,26 +47,76 @@ logging:
             PayApi: debug
 #        max-retries-on-next-service-instance: 1
 
+#resilience4j:
+#  circuitbreaker:
+#    configs:
+#      default:
+#        slidingWindowType: COUNT_BASED
+#        slidingWindowSize: 6
+#        minimumNumberOfCalls: 3
+#        wait-duration-in-open-state: 5s
+#        permittedNumberOfCallsInHalfOpenState: 2
+#        automaticTransitionFromOpenToHalfOpenEnabled: true
+#        failureRateThreshold: 50
+#        recordExceptions:
+#          - org.springframework.web.client.HttpServerErrorException
+#          - java.lang.NullPointerException
+#          - java.util.concurrent.TimeoutException
+#          - org.springframework.web.client.ResourceAccessException
+
+
+#resilience4j:
+#  circuitbreaker:
+#    configs:
+#      default:
+#        slidingWindowType: TIME_BASED
+#        slidingWindowSize: 6
+#        minimumNumberOfCalls: 3
+#        wait-duration-in-open-state: 5s
+#        permittedNumberOfCallsInHalfOpenState: 2
+#        automaticTransitionFromOpenToHalfOpenEnabled: true
+#        failureRateThreshold: 50
+#        recordExceptions:
+#          - org.springframework.web.client.HttpServerErrorException
+#          - java.lang.NullPointerException
+#          - java.util.concurrent.TimeoutException
+#          - org.springframework.web.client.ResourceAccessException
+#    instances:
+#      cloud-payment-service:
+#        baseConfig: default
+
+
 resilience4j:
-  circuitbreaker:
+#  circuitbreaker:
+#    configs:
+#      default:
+#        slidingWindowType: COUNT_BASED
+#        slidingWindowSize: 6
+#        minimumNumberOfCalls: 2
+#        slow-call-duration-threshold: 500ms
+#        slow-call-rate-threshold: 50     # 50%
+#        wait-duration-in-open-state: 5s
+#        permittedNumberOfCallsInHalfOpenState: 2
+#        automaticTransitionFromOpenToHalfOpenEnabled: true
+#        failureRateThreshold: 100
+#        recordExceptions:
+#          - org.springframework.web.client.HttpServerErrorException
+#          - java.lang.NullPointerException
+#          - java.util.concurrent.TimeoutException
+#          - org.springframework.web.client.ResourceAccessException
+  bulkhead:
     configs:
       default:
-        slidingWindowType: COUNT_BASED
-        slidingWindowSize: 10
-        minimumNumberOfCalls: 5
-        permittedNumberOfCallsInHalfOpenState: 3
-        automaticTransitionFromOpenToHalfOpenEnabled: true
-        failureRateThreshold: 50
-        recordExceptions:
-          - org.springframework.web.client.HttpServerErrorException
-          - java.io.IOException
-          - java.util.concurrent.TimeoutException
-          - org.springframework.web.client.ResourceAccessException
-        ignore-exceptions:
-          -
+        max-concurrent-calls: 2
+        max-wait-duration: 1s
     instances:
       cloud-payment-service:
         baseConfig: default
+  timelimiter:
+    configs:
+      default:
+        timeout-duration:
+          20s
 
 management:
   endpoint:
@@ -80,3 +129,8 @@ management:
   health:
     circuitbreakers:
       enabled: true
+    logging:
+      level:
+        org.springframework.aop: DEBUG
+        org.springframework.context: DEBUG
+        io.github.resilience4j: TRACE

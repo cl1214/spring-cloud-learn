@@ -18,6 +18,9 @@ public interface PayApi {
     public void timeOut();
 
     @GetMapping("pay/circuitBreaker")
-    public String circuitBreaker(Long id);
+    public String circuitBreaker(@RequestParam("id") Long id);
+
+    @GetMapping("pay/bulkhead")
+    public String bulkhead(@RequestParam("id") Long id);
 
 }

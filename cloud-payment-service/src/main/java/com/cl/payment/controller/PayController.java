@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 @RefreshScope
 @RestController
 @RequestMapping("pay")
@@ -50,10 +51,24 @@ public class PayController {
     }
 
     @GetMapping("circuitBreaker")
-    public String circuitBreaker(Long id) {
-        if (id == 9999) {
-            int i = 1 / 0;
-            return "";
+    public String circuitBreaker(@RequestParam("id") Long id) {
+        if (id == 2) {
+           throw new ArithmeticException();
+        }
+        if (id == 3) {
+            throw new NullPointerException();
+        }
+        return "正常返回";
+    }
+
+    @GetMapping("bulkhead")
+    public String bulkhead(@RequestParam("id") Long id) {
+        if (id == 2) {
+            try {
+                Thread.sleep(50000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
         return "正常返回";
     }

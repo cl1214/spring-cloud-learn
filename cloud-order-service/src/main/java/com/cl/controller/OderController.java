@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.util.DateUtils;
 import com.cl.common.api.PayApi;
 import com.cl.common.resp.ResultData;
 import com.cl.service.OrderService;
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
@@ -68,11 +69,35 @@ public class OderController {
 
     @GetMapping("circuitBreaker")
     @CircuitBreaker(name = "cloud-payment-service", fallbackMethod = "fallback")
-    public String circuitBreaker(Long id) {
-        return payApi.circuitBreaker(id);
+    public String circuitBreaker(@RequestParam("id") Long id) {
+        if (id == 2) {
+            throw new ArithmeticException();
+        }
+        if (id == 3) {
+            throw new NullPointerException();
+        }
+        if (id == 4) {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return "正常返回";
+//        return payApi.circuitBreaker(id);
     }
 
     private String fallback(Long id, Throwable ex) {
         return "系统出错";
+    }
+
+    @GetMapping("bulkhead")
+    @Bulkhead(name = "cloud-payment-service", fallbackMethod = "bulkFallback", type = Bulkhead.Type.SEMAPHORE)
+    public String bulkhead(@RequestParam("id") Long id) {
+        return payApi.bulkhead(id);
+    }
+
+    private String bulkFallback(Long id, Throwable ex) {
+        return "超出最大连接数量";
     }
 }
